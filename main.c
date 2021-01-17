@@ -6,6 +6,7 @@ typedef unsigned char u8;
 sbit LSA = P2 ^ 2;
 sbit LSB = P2 ^ 3;
 sbit LSC = P2 ^ 4;
+sbit beep=P1^5;
 
 u8 code smgduan[10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f}; //��ʾ0-9
 u8 num = 0, DisplayData[8];
@@ -84,11 +85,33 @@ void DigDisplay()
 		P0 = 0x00;
 	}
 }
+void alert(int temp)
+{ 
+	float tp;
+    temp= Ds18b20ReadTemp();
+	temp = temp - 1;
+	temp = ~temp;
+	tp = temp;
+	temp = tp * 0.0625 * 100 + 0.5;
+   if (temp>=25){
+ while(1){
+
+ beep=~beep;
+ delay(10);
+
+  }				 }
+}
 void main()
-{
+{	 
+ 	
+	
 	while (1)
 	{
 		datapros(Ds18b20ReadTemp());
+		alert(Ds18b20ReadTemp());
 		DigDisplay();
+		
+		 
 	}
+	 
 }
